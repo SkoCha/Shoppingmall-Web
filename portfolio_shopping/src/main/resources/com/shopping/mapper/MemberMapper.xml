@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shopping.mapper.MemberMapper">
+
+<!-- 회원 가입 -->
+<insert id="regist">
+	insert into t_member (userId, userPass, userName, userPhone, userBirth, userAddr1, userAddr2, userAddr3) 
+		values (#{userId}, #{userPass}, #{userName}, #{userPhone}, #{userBirth}, #{userAddr1}, #{userAddr2}, #{userAddr3})
+</insert>
+
+<!-- 로그인 -->
+<select id="login" resultType="com.shopping.domain.MemberVO">
+	select userId, userName, userPass, userPhone, userBirth, regDate, userAddr1, userAddr2, userAddr3, enabled
+		from t_member where userId = #{userId}
+</select>
+
+</mapper> 
