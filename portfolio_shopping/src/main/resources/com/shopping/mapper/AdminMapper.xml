@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shopping.mapper.AdminMapper">
+
+<!-- 카테고리 가져오기 -->
+<select id="getCategory" resultType="com.shopping.domain.CategoryVO">
+	select level, cateName, cateCode, cateCodeRef 
+		from t_goods_category
+			start with cateCodeRef is null connect by prior cateCode = cateCodeRef
+</select>
+
+<!-- 관리자 상품 목록 가져오기 -->
+<select id="getGoodsList" resultType="com.shopping.domain.GoodsVO">
+	select A.gdsNum, A.gdsName, A.cateCode, B.cateName, B.cateCodeRef, 
+		A.gdsPrice, A.gdsStock, A.gdsDesc, A.gdsDate, A.gdsImg, A.gdsThumb  
+			from t_goods A, t_goods_category B where A.cateCode = B.cateCode order by A.gdsNum desc
+</select>
+
+<!-- 관리자 상품 조회 -->
+<select id="getGoodsView" resultType="com.shopping.domain.GoodsVO">
+	select A.gdsNum, A.gdsName, A.cateCode, B.cateName, B.cateCodeRef, 
+		A.gdsPrice, A.gdsStock, A.gdsDesc, A.gdsDate, A.gdsImg, A.gdsThumb  
+			from t_goods A, t_goods_category B where A.gdsNum = #{gdsNum} AND A.cateCode = B.cateCode
+</select>
+
+<!-- 관리자 상품 등록 -->
+<insert id="goodsRegister">
+	insert into t_goods (gdsNum, gdsName, cateCode, gdsPrice, gdsStock, gdsDesc, gdsImg, gdsThumb)
+		values (t_goods_seq.nextval, #{gdsName}, #{cateCode}, #{gdsPrice}, #{gdsStock}, #{gdsDesc}, #{gdsImg}, #{gdsThumb})
+</insert>
+
+<!-- 관리자 상품 수정 -->
+<update id="goodsModify">
+	update t_goods set gdsName = #{gdsName}, cateCode = #{cateCode}, gdsPrice = #{gdsPrice}, gdsStock = #{gdsStock}, gdsDesc = #{gdsDesc},
+		gdsImg = #{gdsImg}, gdsThumb = #{gdsThumb} where gdsNum = #{gdsNum}
+</update>
+
+<!-- 관리자 상품 삭제 -->
+<delete id="goodsRemove">
+	delete from t_goods where gdsNum = #{gdsNum}
+</delete>
+
+</mapper> 

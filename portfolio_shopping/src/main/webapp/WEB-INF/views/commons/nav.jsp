@@ -14,7 +14,7 @@
 		<ul class="nav navbar-nav">
 			<c:if test="${member != null}">
 			<li class="dropdown mega-dropdown"><a href="#"
-				class="dropdown-toggle" data-toggle="dropdown">회의록 <span
+				class="dropdown-toggle" data-toggle="dropdown">상품 목록 <span
 					class="caret"></span></a>
 				<ul class="dropdown-menu mega-dropdown-menu">
 					<li class="col-sm-3">
@@ -117,7 +117,7 @@
 					</li>
 				</ul></li>
 			<li class="dropdown mega-dropdown"><a href="#"
-				class="dropdown-toggle" data-toggle="dropdown">일정 관리<span
+				class="dropdown-toggle" data-toggle="dropdown">장바구니<span
 					class="caret"></span></a>
 				<ul class="dropdown-menu mega-dropdown-menu">
 					<li class="col-sm-3">
@@ -219,7 +219,7 @@
 					</li>
 				</ul></li>
 				</c:if>
-			<li><a href="#">게시판</a></li>
+			<li><a href="#">상품소감</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<c:if test="${member != null}">
@@ -239,8 +239,8 @@
 						data-toggle="dropdown" role="button" href="/admin/index"
 						aria-expanded="false"> 관리자 메뉴<span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="/admin/depart">상품 등록</a></li>
-							<li><a href="/admin/depart">상품 목록</a></li>
+							<li><a href="/admin/goods/register">상품 등록</a></li>
+							<li><a href="/admin/goods/list">상품 목록</a></li>
 							<li><a href="/admin/depart">상품평 관리</a></li>
 							<li class="divider"></li>
 							<li><a href="/admin/depart">회원 관리</a></li>

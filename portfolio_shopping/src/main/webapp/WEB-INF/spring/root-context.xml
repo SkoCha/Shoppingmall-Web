@@ -12,10 +12,12 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 	
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
-		<property name="driverClassName" value="org.mariadb.jdbc.Driver"></property>
-		<property name="jdbcUrl" value="jdbc:mariadb://localhost:3307/portfolio_management"></property>
-		<property name="username" value="test"></property>
-		<property name="password" value="3243"></property>
+		<!-- <property name="driverClassName" value="org.mariadb.jdbc.Driver"></property> -->
+		<!-- <property name="jdbcUrl" value="jdbc:mariadb://localhost:3307/portfolio_management"></property> -->
+		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE"></property>
+		<property name="username" value="test_shopping"></property>
+		<property name="password" value="test_3243"></property>
 	</bean>
 		
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
@@ -30,5 +32,6 @@
 	
 	<context:component-scan base-package="com.shopping.service"/>
 	<context:component-scan base-package="com.shopping.domain"/>
+	<context:component-scan base-package="com.shopping.utils"/>
 </beans>
 

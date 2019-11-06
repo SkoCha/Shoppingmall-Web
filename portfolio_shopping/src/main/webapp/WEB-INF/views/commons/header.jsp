@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="/resources/css/header.css">
 <link rel="stylesheet" href="/resources/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+<script src="/resources/js/jquery.min.js"></script>
+<script src="/resources/ckeditor/ckeditor.js"></script>
 </head>
 <body>
 <div class="container">
