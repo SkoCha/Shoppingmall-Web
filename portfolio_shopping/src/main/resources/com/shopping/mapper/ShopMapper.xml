@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shopping.mapper.ShopMapper">
+
+<select id="allGoodsList" resultType="com.shopping.domain.GoodsVO">
+	select * from t_goods order by gdsNum desc
+</select>
+
+<!-- 카테고리 대분류 상품 목록 가져오기 -->
+<select id="getGoodsList" resultType="com.shopping.domain.GoodsVO">
+	select A.gdsNum, A.gdsName, A.cateCode, B.cateName, B.cateCodeRef, 
+		A.gdsPrice, A.gdsStock, A.gdsDesc, A.gdsDate, A.gdsImg, A.gdsThumb  
+			from t_goods A inner join t_goods_category B 
+				on A.cateCode = B.cateCode where A.cateCode = #{cateCode}
+				<if test="cateCode == cateCodeRef"> 
+				or B.cateCodeRef = #{cateCodeRef}
+				</if>
+				order by A.gdsNum desc
+</select>
+
+<!-- 상품 상세 조회 -->
+<select id="getGoodsView" resultType="com.shopping.domain.GoodsVO">
+	select A.gdsNum, A.gdsName, A.cateCode, B.cateName, B.cateCodeRef, 
+		A.gdsPrice, A.gdsStock, A.gdsDesc, A.gdsDate, A.gdsImg, A.gdsThumb  
+			from t_goods A, t_goods_category B where A.gdsNum = #{gdsNum} AND A.cateCode = B.cateCode
+</select>
+
+<select id="getGoodsReply" resultType="com.shopping.domain.ReplyVO">
+	select A.gdsNum, A.userId, A.repNum, A.repCon, A.repDate, B.userName
+		from t_reply A inner join t_member B
+			on A.userId = B.userId where gdsNum = #{gdsNum}
+				order by A.repNum desc
+</select>
+
+<!-- 상품평 작성 -->
+<insert id="registReply">
+	insert into t_reply (gdsNum, userId, repNum, repCon) 
+		values (#{gdsNum}, #{userId}, t_reply_seq.nextval, #{repCon})
+</insert>
+
+</mapper> 

@@ -58,14 +58,19 @@ public class AdminController {
 		String ymdPath = UploadFileUtils.calcPath(imgUploadPath);
 		String fileName = null;
 
+		
 		if (file.getOriginalFilename() != null && file.getOriginalFilename() != "") {			
-			fileName = UploadFileUtils.fileUpload(imgUploadPath, file.getOriginalFilename(), file.getBytes(), ymdPath);			
+			// 첨부된 파일이 있을 경우
+			fileName = UploadFileUtils.fileUpload(imgUploadPath, file.getOriginalFilename(), file.getBytes(), ymdPath);
+			vo.setGdsImg(File.separator + "imgUpload" + ymdPath + File.separator + fileName);
+			vo.setGdsThumb(File.separator + "imgUpload" + ymdPath + File.separator + "s" + File.separator + "s_" + fileName);
+			
 		} else {			
-			fileName = uploadPath + File.separator + "images" + File.separator + "none.png";
+			// 첨부된 파일 없을 경우 대체 이미지
+			fileName = File.separator + "images" + File.separator + "none.png";
+			vo.setGdsImg(fileName);
+			vo.setGdsThumb(fileName);
 		}
-
-		vo.setGdsImg(File.separator + "imgUpload" + ymdPath + File.separator + fileName);
-		vo.setGdsThumb(File.separator + "imgUpload" + ymdPath + File.separator + "s" + File.separator + "s_" + fileName);
 		adminService.goodsRegister(vo);
 		return "redirect:/admin/index";
 	}

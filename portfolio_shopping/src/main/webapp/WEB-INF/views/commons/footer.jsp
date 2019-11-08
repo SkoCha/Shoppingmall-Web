@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-	</div>
+</div>
+<div class="row col-md-12">	
 <footer>
 	<div>
 		<ul>
@@ -8,6 +9,7 @@
 		</ul>
 	</div>
 </footer>
+</div>
 </div>
 <script src="/resources/js/header.js"></script>
 <script src="/resources/js/bootstrap.min.js"></script>
