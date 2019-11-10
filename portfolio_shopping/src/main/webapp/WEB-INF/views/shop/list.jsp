@@ -11,7 +11,7 @@
 	<c:forEach items="${list}" var="list">	
 	  <div class="col-sm-6 col-md-4">
 	    <div class="thumbnail">
-	      <a href="/shop/view?num=${list.gdsNum}"><img src="${list.gdsThumb}"></a>
+	      <a href="/shop/view?num=${list.gdsNum}"><img src="${list.gdsThumb}" style="width: 300px; height: 300px;"></a>
 	      <div id="goods_caption" class="caption">
 	        <a href="/shop/view?num=${list.gdsNum}"><h3>${list.gdsName}</h3></a>
 	        <p><fmt:formatNumber value="${list.gdsPrice}" pattern="###,###,###"/>원</p>	        

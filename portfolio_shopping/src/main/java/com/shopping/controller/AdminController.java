@@ -143,8 +143,8 @@ public class AdminController {
 		return "redirect:/admin/index";
 	}
 
-	@GetMapping("/depart")
-	public void adminDepart() {
-		log.info("admin depart manage");
+	@GetMapping("/memberList")
+	public void adminMemberList() {
+		log.info("admin Member List Page");
 	}
 }

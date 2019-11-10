@@ -1,13 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<style>
+	.footer {
+		border-top: 1px solid #ddd;
+		position: relative;
+		bottom: 0;
+	}
+	
+	footer > div {
+		margin-top: 30px;
+	}
+</style>
 </div>
-<div class="row col-md-12">	
+<div class="footer">	
 <footer>
-	<div>
-		<ul>
-			<li>사이트 소개</li>
-			<li>이용 약관</li>
-		</ul>
-	</div>
+	<div class="container text-center">
+      <small>Copyright &copy; chasko14@gmail.com </small>
+    </div>
 </footer>
 </div>
 </div>

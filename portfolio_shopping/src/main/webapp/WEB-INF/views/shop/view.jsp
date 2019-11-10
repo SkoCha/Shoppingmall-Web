@@ -4,7 +4,8 @@
 <%@ include file="../commons/header.jsp" %>
 
 <style>
-#non_image_section { 
+
+	#non_image_section { 
 		margin-left: 30px;
 		}
 		
@@ -55,6 +56,7 @@
 		padding-top: 20px;
 		margin-left: 0px;
 	}
+	
 </style>
 
 <script>
@@ -66,20 +68,111 @@ function replyList() {
  			var repDate = new Date(this.repDate);
  			repDate = repDate.toLocaleDateString("ko-US");
  			
- 			str += "<li class='left clearfix' data-gdsNum='"+ this.gdsNum +"'>"
+ 			str += "<li class='left clearfix' data-repNum='"+ this.repNum +"'>"
  				+ "<div class='header'>"
  				+ "<strong class='primary-font'>" + this.userName + "</strong> 님"
  				+ "<small class='pull-right text-muted'>" + repDate + "</small>"
  				+ "</div>"
- 				+ "<p>" + this.repCon + "</p>"
+ 				+ "<p><span>" + this.repCon + "</span>"
+ 				+ "<c:if test='${member != null}'>"
+ 				+ "<button id='replyDelete_btn' data-repNum='" + this.repNum + "' class='btn btn-danger btn-xs pull-right' style='margin-left:5px;'>삭제</button>"
+ 				+ "<button id='replyModify_btn' data-repNum='" + this.repNum + "' class='btn btn-warning btn-xs pull-right'>수정</button>"
+ 				+ "</c:if>"
+ 				+ "</p>"
  				+ "</li>"
  		});
  		$("ul.chat").html(str);
  	});
- 	
 }
-</script>
 
+function replyRegist() {
+	$("#reply_btn").on("click", function(){
+		
+		var formObj = $("form[role='replyForm']");
+		var gdsNum = $("#gdsNum").val();
+		var repCon = $("#repCon").val();
+		
+		var data = {
+				gdsNum : gdsNum,
+				repCon : repCon
+		};
+		
+		$.ajax({
+			url : "/shop/view/replyRegist",
+			type : "post",
+			data : data,
+			success : function(){
+				replyList();
+				$("#repCon").val("");
+			}
+		});
+		
+	});	
+}
+
+
+$(document).on("click", "#replyDelete_btn", function(){
+	
+	var deleteConfirm = confirm("댓글을 삭제하시겠습니까?");
+	if(deleteConfirm) {
+		var data = { repNum : $(this).attr("data-repNum") };
+		
+		$.ajax({
+			url : "/shop/view/replyDelete",
+			type : "post",
+			data : data,
+			success : function(result){
+				if(result == 1) {
+					replyList();
+				} else {
+					alert("본인이 작성한 댓글만 삭제 가능합니다.");
+				}
+			},
+			error : function() {
+				alert("로그인 후에 삭제할 수 있습니다.");
+			}
+		});
+	}
+});
+	
+$(document).on("click", "#replyModify_btn", function(){
+	$("#modifyModal").modal();
+	var repNum = $(this).attr("data-repNum");
+	var repCon = $(this).parent().children("span").text();
+	
+	$(".modalInput > input").val(repCon);
+	$(".modal_modify_btn").attr("data-repNum", repNum);
+});
+
+$(document).on("click", ".modal_modify_btn", function(){
+	
+	var modifyConfirm = confirm("댓글을 수정하시겠습니까?");
+	if(modifyConfirm) {
+		var data = { 
+				repNum : $(this).attr("data-repNum"),
+				repCon : $(".modalInput > input").val()
+				};
+		
+		$.ajax({
+			url : "/shop/view/replyModify",
+			type : "post",
+			data : data,
+			success : function(result){
+				if(result == 1) {
+					replyList();
+					$("#modifyModal").modal("hide");
+				} else {
+					alert("본인이 작성한 댓글만 수정 가능합니다.");
+				}
+			},
+			error : function() {
+				alert("로그인 후에 수정할 수 있습니다.");
+			}
+		});
+	}
+});
+
+</script>
 <!-- 
 <script type="text/javascript">
 
@@ -154,10 +247,40 @@ $("#remove_btn").click(function(){
 			<div class="form-inline">
 				<div class="form-group">
 					<label><b>구매 수량</b></label>
-					<input class="form-control" min="1" max="${view.gdsStock}" type="number" value="1">
+					<input class="form-control numBox" min="1" max="${view.gdsStock}" type="number" value="1">
 				</div>
 				<div class="form-group">
-					<button type="button" class="btn btn-primary">장바구니 추가</button>
+					<button type="button" class="btn btn-primary addCart_btn">장바구니 추가</button>
+					<script>
+					$(".addCart_btn").click(function(){
+						
+						var gdsNum = $("#gdsNum").val();
+						var cartStock = $(".numBox").val();
+						
+						var data = {
+								gdsNum : gdsNum,
+								cartStock : cartStock
+						};
+						
+						$.ajax({
+							url : "/shop/view/addCart",
+							type : "post",
+							data : data,
+							success : function(result){
+								if(result == 1) {
+									alert("장바구니에 추가 하였습니다.");
+								} else {
+									alert("로그인 후 이용할 수 있습니다.");
+								}
+								$(".numBox").val("1");
+							},
+							error : function(){
+								alert("장바구니 추가에 실패하였습니다.");
+							}
+						});
+						
+					});
+					</script>
 				</div>
 			</div>
 		</div>
@@ -174,14 +297,17 @@ $("#remove_btn").click(function(){
 		</c:if>
 		<c:if test="${member != null}">
     	<div class="row form-group">
-    		<form role="form" method="post" autocomplete="off">
-    			<input type="hidden" name="gdsNum" value="${view.gdsNum}">
+    		<form role="replyForm" method="post" autocomplete="off">
+    			<input type="hidden" id="gdsNum" name="gdsNum" value="${view.gdsNum}">
 	    		<div class="col-md-11">
 	    			<input type="text" class="form-control" name="repCon" id="repCon" placeholder="한줄평 작성">
 	    		</div>
 	    		<div class="col-md-1">
-	    			<button type="submit" id="reply_btn" class="btn btn-default pull-right">등록</button>
+	    			<button type="button" id="reply_btn" class="btn btn-default pull-right">등록</button>
 	    		</div>
+	    		<script>
+	    			replyRegist();
+	    		</script>
     		</form>    		
    		</div>
 		</c:if>
@@ -198,10 +324,32 @@ $("#remove_btn").click(function(){
 			</c:forEach>
 			 --%>
 			 <script>
-			 	replyList();
+			 	replyList();			 	
 			 </script>
 		</ul>
-		 	
+  <div class="modal fade" id="modifyModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h4 class="modal-title">한줄 상품평 수정</h4>
+        </div>
+        <div class="modal-body">
+          <p>아래의 내용을 수정합니다.</p>
+          <div class="modalInput">
+          	<input type="text" class="form-control" name="repCon">
+          </div>
+        </div>
+          <div class="modal-footer">	
+          	<button type="button" class="btn btn-primary modal_modify_btn" data-dismiss="modal">수정하기</button>
+          </div>
+      </div>
+      
+    </div>
+  </div>
+
 	</div>
 </div>
 
