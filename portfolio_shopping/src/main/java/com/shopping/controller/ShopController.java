@@ -22,6 +22,7 @@ import com.shopping.domain.CartVO;
 import com.shopping.domain.GoodsVO;
 import com.shopping.domain.MemberVO;
 import com.shopping.domain.OrderDetailsVO;
+import com.shopping.domain.OrderListVO;
 import com.shopping.domain.OrderVO;
 import com.shopping.domain.ReplyVO;
 import com.shopping.service.ShopService;
@@ -185,5 +186,29 @@ public class ShopController {
 		shopService.myCartDelete(userId);
 		
 		return "redirect:/shop/myOrder";
+	}
+	
+	@GetMapping("myOrder")
+	public void myOrder(HttpSession session, OrderVO order, Model model) {
+		log.info("myOrder List Page");
+		MemberVO member = (MemberVO)session.getAttribute("member");
+		String userId = member.getUserId();
+		
+		order.setUserId(userId);
+		List<OrderVO> orderList = shopService.getMyOrderList(order);
+		model.addAttribute("orderList", orderList);
+	}
+	
+	@GetMapping("myOrderView")
+	public void myOrderView(HttpSession session, @RequestParam("num") String orderId, OrderVO order, Model model) {
+		log.info("myOrder List View Page : " + orderId);
+		MemberVO member = (MemberVO)session.getAttribute("member");
+		String userId = member.getUserId();
+		
+		order.setUserId(userId);
+		order.setOrderId(orderId);
+		
+		List<OrderListVO> orderView = shopService.getMyOrderView(order);
+		model.addAttribute("orderView", orderView);
 	}
 }

@@ -5,8 +5,9 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class OrderVO {
+public class OrderListVO {
 
+	/** t_order Table **/
 	private String orderId;
 	private String userId;
 	private String orderRec;
@@ -18,4 +19,13 @@ public class OrderVO {
 	private Date orderDate;
 	private String delivery;
 	
+	/** t_order_details Table **/
+	private int orderDetailsNum;
+	private int gdsNum;
+	private int cartStock;
+	
+	/** t_goods Table **/
+	private String gdsName;
+	private String gdsThumb;
+	private int gdsPrice;
 }

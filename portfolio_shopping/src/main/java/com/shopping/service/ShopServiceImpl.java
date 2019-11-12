@@ -10,6 +10,7 @@ import com.shopping.domain.CartVO;
 import com.shopping.domain.Criteria;
 import com.shopping.domain.GoodsVO;
 import com.shopping.domain.OrderDetailsVO;
+import com.shopping.domain.OrderListVO;
 import com.shopping.domain.OrderVO;
 import com.shopping.domain.ReplyVO;
 import com.shopping.mapper.ShopMapper;
@@ -102,6 +103,16 @@ public class ShopServiceImpl implements ShopService{
 	@Override
 	public void myCartDelete(String userId) {
 		mapper.myCartDelete(userId);
+	}
+
+	@Override
+	public List<OrderVO> getMyOrderList(OrderVO order) {
+		return mapper.getMyOrderList(order);
+	}
+
+	@Override
+	public List<OrderListVO> getMyOrderView(OrderVO order) {
+		return mapper.getMyOrderView(order);
 	}
 
 }

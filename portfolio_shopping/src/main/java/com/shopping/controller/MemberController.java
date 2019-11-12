@@ -1,17 +1,26 @@
 package com.shopping.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.shopping.domain.Criteria;
 import com.shopping.domain.MemberVO;
+import com.shopping.domain.PageVO;
+import com.shopping.domain.ReplyVO;
 import com.shopping.service.MemberService;
 
 import lombok.extern.log4j.Log4j;
@@ -76,4 +85,58 @@ public class MemberController {
 		return "/member/login";
 	}
 	
+	// 내 상품평 목록 조회
+	@GetMapping("/replyList")
+	public void getAllReply(HttpSession session, Criteria cri, Model model) {
+		log.info("My Reply List Page");
+		MemberVO member = (MemberVO)session.getAttribute("member");
+		String userId = member.getUserId();
+		
+		// 한 페이지에 10개씩 출력
+		cri.setAmount(10);
+		int total = memberService.getTotalReplyCount(userId);
+		List<ReplyVO> replyList = memberService.replyList(userId, cri);
+		model.addAttribute("replyList", replyList);
+		model.addAttribute("pageMaker", new PageVO(cri, total));
+		
+	}
+	
+	// 내 상품평 삭제
+	@DeleteMapping("/replyList/{repNum}")
+	@ResponseBody
+	public boolean deleteReply(HttpSession session, @PathVariable("repNum") Integer repNum) {
+		log.info("My delete Reply : " + repNum);
+		MemberVO member = (MemberVO)session.getAttribute("member");
+		boolean result = false;
+		
+		if(member != null) {
+			memberService.deleteReply(repNum);
+			result = true;
+		}
+		return result;
+	}
+	
+	// 회원 정보 페이지
+	@GetMapping("/myAccount")
+	public void getMyAccount(HttpSession session, Model model) {
+		log.info("My Account Page");
+		MemberVO member = (MemberVO)session.getAttribute("member");
+		String userId = member.getUserId();
+		
+		model.addAttribute("myInfo", memberService.getMyAccount(userId));
+	}
+	
+	@PostMapping("/myAccount")
+	public String myAccountUpdate(HttpSession session, MemberVO member) {
+		log.info("My Account Update Post");
+		
+		String rawPassword = member.getUserPass();
+		String EncryptPassword = passwordEncoder.encode(rawPassword);
+		member.setUserPass(EncryptPassword);
+		
+		memberService.updateMyAccount(member);
+		session.invalidate();
+		return "redirect:/member/login";
+	}
 }
+

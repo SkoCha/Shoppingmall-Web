@@ -43,4 +43,81 @@
 	delete from t_goods where gdsNum = #{gdsNum}
 </delete>
 
+
+<!-- 관리자 모든 주문 목록 관리 조회 -->
+<select id="getOrderList" resultType="com.shopping.domain.OrderVO">
+	select * from t_order
+</select>
+
+<!-- 관리자 특정 주문 목록 조회 -->
+<select id="getOrderView" resultType="com.shopping.domain.OrderListVO">
+	select
+	    O.orderId, O.userId, O.orderRec, O.userAddr1, O.userAddr2, O.userAddr3, O.orderPhone, O.amount, O.orderDate, O.delivery,
+	    D.orderDetailsNum, D.gdsNum, D.cartStock,
+	    G.gdsName,  G.gdsThumb, G.gdsPrice
+	    from t_order O 
+	        inner join t_order_details D on O.orderId = D.orderId
+	        inner join t_goods G on D.gdsNum = G.gdsNum
+	        where O.orderId = #{orderId}
+</select>
+
+<!-- 관리자 배송 상태 수정 -->
+<update id="updateDelivery">
+	update t_order 
+		set delivery = #{delivery} 
+		where orderId = #{orderId}
+</update>
+
+<!-- 배송 완료 상품 수량 조절 -->
+<update id="updateGoodsStock">
+	update t_goods
+		set gdsStock = gdsStock - #{gdsStock}
+		where gdsNum = #{gdsNum}
+</update>
+
+<!-- 관리자 모든 상품평 조회 -->
+<select id="getAllReply" resultType="com.shopping.domain.ReplyVO">
+	<![CDATA[
+	select * from 
+		(
+		select /*+INDEX_DESC(t_reply pk_reply) */
+			rownum rn, gdsNum, userId, repNum, repCon, repDate
+			from t_reply
+			where rownum <= #{pageNum} * #{amount}
+		) where rn > (#{pageNum} - 1) * #{amount}
+	]]>		
+</select>
+
+<!-- 전체 댓글 수 조회 -->
+<select id="getTotalReplyCount" resultType="int">
+	select count(*) from t_reply where repNum > 0
+</select>
+
+<!-- 관리자 상품평 삭제 -->
+<delete id="deleteReply">
+	delete from t_reply where repNum = #{repNum}
+</delete>
+
+<!-- 관리자 리스트 상품 삭제 -->
+<delete id="deleteGoods">
+	delete from t_goods where gdsNum = #{gdsNum}
+</delete>
+
+<!-- 관리자 전체 회원 목록 조회 -->
+<select id="getAllMember" resultType="com.shopping.domain.MemberVO">
+	<![CDATA[
+	select * from 
+		(
+		select /*+INDEX_DESC(t_member pk_member) */
+			rownum rn, userId, userName, userPhone, userAddr1, userAddr2, userAddr3, userBirth, regDate
+			from t_member
+			where rownum <= #{pageNum} * #{amount}
+		) where rn > (#{pageNum} - 1) * #{amount}
+	]]>
+</select>
+
+<!-- 회원 전체 수 조회 -->
+<select id="getMemberTotalCount" resultType="int">
+	select count(*) from t_member
+</select>
 </mapper> 

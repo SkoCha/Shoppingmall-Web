@@ -245,6 +245,7 @@ $("#remove_btn").click(function(){
 		</form>
 		<div class="last_section">
 			<div class="form-inline">
+				<c:if test="${view.gdsStock > 0}">
 				<div class="form-group">
 					<label><b>구매 수량</b></label>
 					<input class="form-control numBox" min="1" max="${view.gdsStock}" type="number" value="1">
@@ -282,6 +283,10 @@ $("#remove_btn").click(function(){
 					});
 					</script>
 				</div>
+				</c:if>
+				<c:if test="${view.gdsStock == 0}">
+					<label><b>현재 재고가 없습니다.</b></label>
+				</c:if>
 			</div>
 		</div>
 	</div>

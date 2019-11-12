@@ -16,75 +16,6 @@
 				class="dropdown-toggle" data-toggle="dropdown">상품 목록 <span
 					class="caret"></span></a>
 				<ul class="dropdown-menu mega-dropdown-menu">
-					<!--
-					<li class="col-sm-3">
-						 <ul>
-							<li class="dropdown-header">Men Collection</li>
-							<div id="menCollection" class="carousel slide"
-								data-ride="carousel">
-								<div class="carousel-inner">
-									<div class="item active">
-										<a href="#"><img
-											src="http://placehold.it/254x150/ff3546/f5f5f5/&text=New+Collection"
-											class="img-responsive" alt="product 1"></a>
-										<h4>
-											<small>Summer dress floral prints</small>
-										</h4>
-										<button class="btn btn-primary" type="button">49,99 €</button>
-										<button href="#" class="btn btn-default" type="button">
-											<span class="glyphicon glyphicon-heart"></span> Add to
-											Wishlist
-										</button>
-									</div>
-									End Item
-									<div class="item">
-										<a href="#"><img
-											src="http://placehold.it/254x150/3498db/f5f5f5/&text=New+Collection"
-											class="img-responsive" alt="product 2"></a>
-										<h4>
-											<small>Gold sandals with shiny touch</small>
-										</h4>
-										<button class="btn btn-primary" type="button">9,99 €</button>
-										<button href="#" class="btn btn-default" type="button">
-											<span class="glyphicon glyphicon-heart"></span> Add to
-											Wishlist
-										</button>
-									</div>
-									End Item
-									<div class="item">
-										<a href="#"><img
-											src="http://placehold.it/254x150/2ecc71/f5f5f5/&text=New+Collection"
-											class="img-responsive" alt="product 3"></a>
-										<h4>
-											<small>Denin jacket stamped</small>
-										</h4>
-										<button class="btn btn-primary" type="button">49,99 €</button>
-										<button href="#" class="btn btn-default" type="button">
-											<span class="glyphicon glyphicon-heart"></span> Add to
-											Wishlist
-										</button>
-									</div>
-									End Item
-								</div>
-								End Carousel Inner
-								Controls
-								<a class="left carousel-control" href="#menCollection"
-									role="button" data-slide="prev"> <span
-									class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-									<span class="sr-only">Previous</span>
-								</a> <a class="right carousel-control" href="#menCollection"
-									role="button" data-slide="next"> <span
-									class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-									<span class="sr-only">Next</span>
-								</a>
-							</div>
-							/.carousel
-							<li class="divider"></li>
-							<li><a href="#">View all Collection <span
-									class="glyphicon glyphicon-chevron-right pull-right"></span></a></li>
-						</ul>
-					</li>
-					-->
 					<li class="col-sm-3">
 						<ul>
 							<li class="dropdown-header"><a href="/shop/list?category=100&lev=1">Men's Item</a></li>
@@ -120,20 +51,19 @@
 					</li>
 				</ul>
 			</li>
-			<li><a href="#">상품평</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<c:if test="${member != null}">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" role="button" aria-expanded="false"> <c:out
-							value="${member.userId}" /><span class="caret"></span>
+							value="${member.userId}"/>님<span class="caret"></span>
 				</a>
 					<ul class="dropdown-menu" role="menu">
-						<li><a href="/shop/myCart">장바구니</a></li>
+						<li><a href="/shop/myCart">내 장바구니</a></li>
 						<li><a href="/shop/myOrder">내 주문 목록</a></li>
-						<li><a href="#">작성한 상품평</a></li>
+						<li><a href="/member/replyList">작성한 상품평</a></li>
 						<li class="divider"></li>
-						<li><a href="#">회원 정보 수정</a></li>
+						<li><a href="/member/myAccount">회원 정보 수정</a></li>
 					</ul></li>
 				<c:if test="${member.enabled == 1}">
 					<li class="dropdown"><a class="dropdown-toggle"
@@ -142,9 +72,11 @@
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="/admin/goods/register">상품 등록</a></li>
 							<li><a href="/admin/goods/list">상품 목록 관리</a></li>
-							<li><a href="/admin/depart">상품평 관리</a></li>
+							<li><a href="/admin/goods/replyList">상품평 관리</a></li>
 							<li class="divider"></li>
-							<li><a href="/admin/depart">회원 관리</a></li>
+							<li><a href="/admin/shop/orderList">주문 목록 관리</a></li>
+							<li class="divider"></li>
+							<li><a href="/admin/member/management">회원 관리</a></li>
 						</ul></li>
 				</c:if>
 				<li><a href="/member/logout">로그아웃</a></li>

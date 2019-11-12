@@ -7,6 +7,7 @@ import com.shopping.domain.CartVO;
 import com.shopping.domain.Criteria;
 import com.shopping.domain.GoodsVO;
 import com.shopping.domain.OrderDetailsVO;
+import com.shopping.domain.OrderListVO;
 import com.shopping.domain.OrderVO;
 import com.shopping.domain.ReplyVO;
 
@@ -44,4 +45,10 @@ public interface ShopService {
 	
 	// 주문 성공 시 장바구니 내역 삭제
 	public void myCartDelete(String userId);
+	
+	// 내 주문 목록 조회
+	public List<OrderVO> getMyOrderList(OrderVO order);
+	
+	// 내 주문 상세 목록 조회
+	public List<OrderListVO> getMyOrderView(OrderVO order);
 }

@@ -5,6 +5,8 @@
 
 <style>
 	#goods_caption {margin: 0 25px;}
+	.pagination { display: block; text-align: center; }
+	.pagination > li > a { float: none; }
 </style>
 
 <div class="row">
@@ -23,7 +25,6 @@
   </c:forEach>
 </div>
 <div class="row">
-	<div class="col-md-6 col-md-offset-4">
 	<ul class="pagination">
 		
 		<c:if test="${pageMaker.prev}">
@@ -53,7 +54,6 @@
 			});
 		});
 	</script>
-</div>
 </div>
 
 <%@ include file="./commons/footer.jsp" %>

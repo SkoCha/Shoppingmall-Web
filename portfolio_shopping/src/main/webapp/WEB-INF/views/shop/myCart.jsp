@@ -2,6 +2,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ include file="../commons/header.jsp" %>
+<style>
+	#post_btn { margin-left: 30px; }
+	.empty_cart { text-align: center; }
+</style>
 <div class="panel panel-default">
 	<div class="panel-body">
 		<div class="row">
@@ -41,7 +45,10 @@
                     </tr>
                     <c:set var="sum" value="${sum + (cartList.gdsPrice * cartList.cartStock)}" />
                     </c:forEach>
-                    <c:set var="deliverFee" value="2500" />
+                    	<c:set var="deliverFee" value="0"/>
+                    	<c:if test="${cartList != null}">
+                    		 <c:set var="deliverFee" value="${deliverFee + 2500}"/>
+                    	</c:if>
                     <script>
                    		$("#cart_delete_btn").on("click", function(){
                    			var conf = confirm("선택한 상품을 삭제하시겠습니까?");
@@ -74,7 +81,7 @@
                         <td>   </td>
                         <td>   </td>
                         <td>   </td>
-                        <td><h5>배송료</h5></td>
+                        <td><h5>배송료</h5></td>                        
                         <td class="text-right"><h5><strong><fmt:formatNumber value="${deliverFee}" pattern="###,###,###"/>원</strong></h5></td>
                     </tr>
                     <tr>
@@ -85,9 +92,9 @@
                         <td class="text-right"><h3><strong><fmt:formatNumber value="${sum + deliverFee}" pattern="###,###,###"/>원</strong></h3></td>
                     </tr>
                     </tbody>
-            	</table>
+            	</table>            	
             	<div class="orderInfo">
-            	<form class="form-horizontal" method="post" role="form" autocomplete="off">
+            	<form action="/shop/myCart" class="form-horizontal" method="post" role="form" autocomplete="off">
                     <div class="panel panel-default">
   						<div class="panel-heading"><label>주문 정보 입력하기</label></div>
   						<div class="panel-body order">
@@ -105,32 +112,119 @@
     									<input type="text" name="orderPhone" id="orderPhone" required="required" class="form-control" placeholder="010-XXXX-YYYY">
     								</div>
     							</div>
-    							<div class="form-group">
+    							<div class="form-group form-inline">
     								<label class="col-sm-2 control-label">우편번호</label>
     								<div class="col-sm-2">
-    									<input type="text" name="userAddr1" id="userAddr1" required="required" class="form-control" placeholder="우편번호">
+    									<input type="text" id="sample2_postcode" required="required" class="form-control" placeholder="우편번호">
+   									</div>
+   									<div class="col-sm-2">
+    									<input type="button" id="post_btn" class="form-control" onclick="sample2_execDaumPostcode()" value="주소 찾기">
     								</div>
     							</div>
     							<div class="form-group">
     								<label class="col-sm-2 control-label">주소</label>
     								<div class="col-sm-4">
-    									<input type="text" name="userAddr2" id="userAddr2" required="required" class="form-control" placeholder="EX) 경기도 성남시 분당구 구미동">
+    									<input type="text" name="userAddr1" id="sample2_address" required="required" class="form-control" placeholder="주소">
     								</div>
     							</div>
     							<div class="form-group">
     								<label class="col-sm-2 control-label">상세 주소</label>
-    								<div class="col-sm-6">
-    									<input type="text" name="userAddr3" id="userAddr3" required="required" class="form-control" placeholder="EX) 주공아파트 101동 101호">
+    								<div class="col-sm-4">
+    									<input type="text" name="userAddr2" id="sample2_detailAddress" required="required" class="form-control" placeholder="상세 주소">
     								</div>
     							</div>
+    							<div class="form-group">
+    								<label class="col-sm-2 control-label">참고 항목</label>
+    								<div class="col-sm-4">
+    									<input type="text" name="userAddr3" id="sample2_extraAddress" required="required" class="form-control" placeholder="참고 항목">
+    								</div>
+    							</div>
+    							<div id="layer" style="display:none;position:fixed;overflow:hidden;z-index:1;-webkit-overflow-scrolling:touch;">
+									<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnCloseLayer" style="cursor:pointer;position:absolute;right:-3px;top:-3px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">
+									</div>
+									
+									<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+									<script>
+									    var element_layer = document.getElementById('layer');
+									
+									    function closeDaumPostcode() {
+									        element_layer.style.display = 'none';
+									    }
+									
+									    function sample2_execDaumPostcode() {
+									        new daum.Postcode({
+									            oncomplete: function(data) {
+									                var addr = ''; // 주소 변수
+									                var extraAddr = ''; // 참고항목 변수
+									
+									                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+									                    addr = data.roadAddress;
+									                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+									                    addr = data.jibunAddress;
+									                }
+									
+									                if(data.userSelectedType === 'R'){
+									                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+									                        extraAddr += data.bname;
+									                    }
+									                    if(data.buildingName !== '' && data.apartment === 'Y'){
+									                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+									                    }
+									                    if(extraAddr !== ''){
+									                        extraAddr = ' (' + extraAddr + ')';
+									                    }
+									                    document.getElementById("sample2_extraAddress").value = extraAddr;
+									                
+									                } else {
+									                    document.getElementById("sample2_extraAddress").value = '';
+									                }
+									
+									                document.getElementById('sample2_postcode').value = data.zonecode;
+									                document.getElementById("sample2_address").value = addr;
+									                document.getElementById("sample2_detailAddress").focus();
+									
+									                element_layer.style.display = 'none';
+									            },
+									            width : '100%',
+									            height : '100%',
+									            maxSuggestItems : 5
+									        }).embed(element_layer);
+									
+									        element_layer.style.display = 'block';
+									
+									        initLayerPosition();
+									    }
+									
+									    function initLayerPosition(){
+									        var width = 300; //우편번호서비스가 들어갈 element의 width
+									        var height = 400; //우편번호서비스가 들어갈 element의 height
+									        var borderWidth = 5; //샘플에서 사용하는 border의 두께
+									
+									        element_layer.style.width = width + 'px';
+									        element_layer.style.height = height + 'px';
+									        element_layer.style.border = borderWidth + 'px solid';
+									        element_layer.style.left = (((window.innerWidth || document.documentElement.clientWidth) - width)/2 - borderWidth) + 'px';
+									        element_layer.style.top = (((window.innerHeight || document.documentElement.clientHeight) - height)/2 - borderWidth) + 'px';
+									    }
+									</script>
   						</div>
 					</div>
-                        <button type="button" class="btn btn-default">
+                        <button type="button" class="btn btn-default" id="toList">
                             <span class="glyphicon glyphicon-shopping-cart"></span> 상품 목록
                         </button>
-                        <button type="submit" class="btn btn-success pull-right">
+                        <script>
+                        	$("#toList").click(function(){
+                        		location.href = "/main";
+                        	});
+                        </script>
+                        <button type="submit" class="btn btn-success pull-right" id="order_btn">
                             상품 주문 <span class="glyphicon glyphicon-play"></span>
                         </button>
+                        <script>
+                        	$("#order_btn").click(function(e){
+                        		e.preventDefault();
+                        	});
+                        </script>
                         </form>
         			</div>
         		</div>	

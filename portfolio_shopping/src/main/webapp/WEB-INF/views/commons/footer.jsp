@@ -8,6 +8,7 @@
 	
 	footer > div {
 		margin-top: 30px;
+		margin-bottom: 30px;
 	}
 </style>
 </div>

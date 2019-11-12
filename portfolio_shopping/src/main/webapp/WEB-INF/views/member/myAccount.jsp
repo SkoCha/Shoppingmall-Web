@@ -8,48 +8,52 @@
 <div class="panel panel-default">
   <div class="panel-body">
   	<div class="row header">
-  		<h1>회원가입 페이지</h1>
+  		<h1>회원 정보 페이지</h1>
   	</div>
   	<div class="col-md-4">
   	</div>	
   	<div class="col-md-4">
-	<form class="form-horizontal" action="/member/register" method="post" autocomplete="off">
+	<form class="form-horizontal" role="form" action="/member/myAccount" method="post" autocomplete="off">
 		<div class="form-group">
 			<label>이메일</label>
-			<input class="form-control" type="email" name="userId" placeholder="이메일을 입력하세요." required="required">
+			<input class="form-control" type="email" name="userId" value="${myInfo.userId}" readonly="readonly" placeholder="이메일을 입력하세요." required="required">
 		</div>
 		<div class="form-group">
 			<label>이름</label>
-			<input class="form-control" type="text" name="userName" placeholder="이름을 입력하세요." required="required">
+			<input class="form-control" type="text" name="userName" value="${myInfo.userName}" placeholder="이름을 입력하세요." required="required">
 		</div>
 		<div class="form-group">
 			<label>휴대폰번호</label>
-			<input class="form-control" type="text" name="userPhone" placeholder="휴대폰 번호 11자리를 입력하세요." required="required">
+			<input class="form-control" type="text" name="userPhone" value="${myInfo.userPhone}" placeholder="휴대폰 번호 11자리를 입력하세요." required="required">
 		</div>
 		<div class="form-group">
-			<label>비밀번호</label>
-			<input class="form-control" type="password" name="userPass" placeholder="8~12자리 비밀번호를 입력하세요." required="required">
+			<label>현재 비밀번호</label>
+			<input class="form-control" type="password" name="oldPass" placeholder="기존 비밀번호를 입력하세요." required="required">
 		</div>
 		<div class="form-group">
-			<label>비밀번호 확인</label>
-			<input class="form-control" type="password" name="userRePass" placeholder="비밀번호를 다시 입력하세요." required="required">
+			<label>새 비밀번호</label>
+			<input class="form-control" type="password" name="userPass" placeholder="8~12자리 새 비밀번호를 입력하세요." required="required">
+		</div>
+		<div class="form-group">
+			<label>새 비밀번호 확인</label>
+			<input class="form-control" type="password" name="rePass" placeholder="새 비밀번호를 다시 입력하세요." required="required">
 		</div>
 		<div class="form-group">
 			<label>생년 월일</label>
-			<input class="form-control" type="text" name="userBirth" placeholder="생년월일을 8자로 입력하세요. ex. 19920505" required="required">
+			<input class="form-control" type="text" name="userBirth" value="${myInfo.userBirth}"  placeholder="생년월일을 8자로 입력하세요. ex. 19920505" required="required">
 		</div>
 		<div class="form-group">
 			<label>우편 번호<input type="button" id="post_btn" class="btn btn-default pull-right btn-xs" onclick="sample2_execDaumPostcode()" value="주소 찾기"></label>
 			<input type="text" id="sample2_postcode" required="required" class="form-control" placeholder="우편번호">
 		</div>	
 		<div class="form-group">	
-			<label>주소</label><input type="text" name="userAddr1" id="sample2_address" required="required" class="form-control" placeholder="주소">
+			<label>주소</label><input type="text" name="userAddr1" value="${myInfo.userAddr1}" id="sample2_address" required="required" class="form-control" placeholder="주소">
 		</div>	
 		<div class="form-group">	
-			<label>상세 주소</label><input type="text" name="userAddr2" id="sample2_detailAddress" required="required" class="form-control" placeholder="상세 주소">
+			<label>상세 주소</label><input type="text" name="userAddr2" value="${myInfo.userAddr2}" id="sample2_detailAddress" required="required" class="form-control" placeholder="상세 주소">
 		</div>	
 		<div class="form-group">	
-			<label>참고 항목</label><input type="text" name="userAddr3" id="sample2_extraAddress" required="required" class="form-control" placeholder="참고 항목">
+			<label>참고 항목</label><input type="text" name="userAddr3" value="${myInfo.userAddr3}" id="sample2_extraAddress" required="required" class="form-control" placeholder="참고 항목">
 		</div>
 		<div id="layer" style="display:none;position:fixed;overflow:hidden;z-index:1;-webkit-overflow-scrolling:touch;">
 			<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnCloseLayer" style="cursor:pointer;position:absolute;right:-3px;top:-3px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">
@@ -120,9 +124,24 @@
 		    }
 		</script>
 		<div class="form-group">
-			<input type="hidden" name="_csrf.parameterName" value="_csrf.token">
-			<button type="reset" class="btn btn-default">다시 작성</button>
-			<button type="submit" class="btn btn-primary pull-right">회원 가입</button>
+			<button type="submit" id="updateMyAccount_btn" class="btn btn-primary pull-right">정보 수정</button>
+			<script>
+				$("#updateMyAccount_btn").click(function(e){
+					e.preventDefault();
+					var oldPass = $("input[name=oldPass]").val();
+					var formObj = $("form[role='form']");
+					var userPass = $("input[name=userPass]").val();
+					var rePass = $("input[name=rePass]").val();					
+					if(userPass != rePass) {
+						alert("변경할 비밀번호가 일치하지 않습니다.");
+						return false;
+					} else {
+						// console.log(userPass);
+						formObj.submit();
+						alert("회원 정보 수정이 완료 되었습니다. 다시 로그인 해주세요.");
+					}
+				});
+			</script>
 		</div>	
 	</form>
 </div>

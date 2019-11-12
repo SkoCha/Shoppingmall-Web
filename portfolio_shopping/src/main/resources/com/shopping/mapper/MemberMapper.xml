@@ -17,4 +17,47 @@
 		from t_member where userId = #{userId}
 </select>
 
+<!-- 내가 작성한 모든 상품평 조회 -->
+<select id="getAllReply" resultType="com.shopping.domain.ReplyVO">
+	<![CDATA[
+	select * from 
+		(
+		select /*+INDEX_DESC(t_reply pk_reply) */
+			rownum rn, gdsNum, userId, repNum, repCon, repDate
+			from t_reply
+			where rownum <= #{cri.pageNum} * #{cri.amount} and userId = #{userId}
+		) where rn > (#{cri.pageNum} - 1) * #{cri.amount}
+	]]>		
+</select>
+
+<!-- 전체 댓글 수 조회 -->
+<select id="getTotalReplyCount" resultType="int">
+	select count(*) from t_reply where repNum > 0 and userId = #{userId}
+</select>
+
+<!-- 상품평 삭제 -->
+<delete id="deleteReply">
+	delete from t_reply where repNum = #{repNum}
+</delete>
+
+<!-- 회원 정보 조회 -->
+<select id="getMyAccount" resultType="com.shopping.domain.MemberVO">
+	select 
+		userId, userPass, userName, userPhone, userBirth, userAddr1, userAddr2, userAddr3
+	from t_member where userId = #{userId}
+</select>
+
+<!-- 회원 정보 수정 -->
+<update id="updateMyAccount">
+	update t_member	set 
+		userPass = #{userPass},
+		userName = #{userName},
+		userPhone = #{userPhone},
+		userAddr1 = #{userAddr1},
+		userAddr2 = #{userAddr2},
+		userAddr3 = #{userAddr3},
+		userBirth = #{userBirth}
+	where userId = #{userId}	
+</update>
+
 </mapper> 

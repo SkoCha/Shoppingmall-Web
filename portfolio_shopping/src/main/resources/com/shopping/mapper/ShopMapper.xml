@@ -9,7 +9,7 @@
 	<![CDATA[
 	select * from 
 		(
-		select /*+INDEX_DESC(t_goods pk_gooods) */
+		select /*+INDEX_DESC(t_goods pk_goods) */
 			rownum rn, gdsNum, gdsName, cateCode, gdsPrice, gdsStock, gdsDesc, gdsImg, gdsThumb, gdsDate
 			from t_goods
 			where rownum <= #{pageNum} * #{amount}
@@ -113,5 +113,23 @@
 <delete id="myCartDelete">
 	delete t_cart where userId = #{userId}
 </delete>
+
+<!-- 내 주문 목록 조회 -->
+<select id="getMyOrderList" resultType="com.shopping.domain.OrderVO">
+	select * from t_order where userId = #{userId}
+</select>
+
+<!-- 내 주문 상세 목록 조회 -->
+<select id="getMyOrderView" resultType="com.shopping.domain.OrderListVO">
+	select
+	    O.orderId, O.userId, O.orderRec, O.userAddr1, O.userAddr2, O.userAddr3, O.orderPhone, O.amount, O.orderDate, O.delivery,
+	    D.orderDetailsNum, D.gdsNum, D.cartStock,
+	    G.gdsName,  G.gdsThumb, G.gdsPrice
+	    from t_order O 
+	        inner join t_order_details D on O.orderId = D.orderId
+	        inner join t_goods G on D.gdsNum = G.gdsNum
+	        where O.userId = #{userId}
+	        and O.orderId = #{orderId}
+</select>
 
 </mapper> 
